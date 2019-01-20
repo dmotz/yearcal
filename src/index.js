@@ -1,11 +1,10 @@
 import './style.scss'
 
 const year = 2019
-const startOnDay = 1
+const startOnDayOfWeek = 1
+const rowLength = 14
 const days = 365
-
-const start = new Date(year, 0).getTime()
-const dayLen = 1000 * 60 * 60 * 24
+const weekendDays = [0, 6]
 
 const monthLabels = [
   'Jan',
@@ -26,6 +25,9 @@ const moons = [21, 19, 21, 19, 18, 17, 16, 15, 14, 13, 12, 12]
 
 const last = a => a[a.length - 1]
 
+const start = new Date(year, 0).getTime()
+const dayLen = 1000 * 60 * 60 * 24
+
 const makeDay = (i, isFiller) => {
   if (isFiller) {
     return {
@@ -34,11 +36,13 @@ const makeDay = (i, isFiller) => {
   }
 
   const date = new Date(start + dayLen * i)
+  const dayOfWeek = date.getDay()
 
   return {
     month: date.getMonth(),
     date: date.getDate(),
-    dayOfWeek: (date.getDay() - startOnDay + 7) % 7
+    dayOfWeek: (dayOfWeek - startOnDayOfWeek + 7) % 7,
+    isWeekend: dayOfWeek === weekendDays[0] || dayOfWeek === weekendDays[1]
   }
 }
 
@@ -53,7 +57,7 @@ const weeks = new Array(days).fill().reduce(
       week.push.apply(week, makeFillers(day.dayOfWeek))
     }
 
-    if (week.length < 7) {
+    if (week.length < rowLength) {
       week.push(day)
     } else {
       week = [day]
@@ -61,14 +65,15 @@ const weeks = new Array(days).fill().reduce(
     }
 
     if (i === days - 1) {
-      week.push.apply(week, makeFillers(6 - day.dayOfWeek))
+      week.push.apply(week, makeFillers(rowLength - 1 - day.dayOfWeek))
     }
     return a
   },
   [[]]
 )
 
-const onePct = 365 / 7
+const rowRatio = 7 / rowLength
+const onePct = (365 / 7) * rowRatio
 let lastRem = 0
 let pctN = 0
 
@@ -80,43 +85,44 @@ container.innerHTML = `
       let spacerFlex
       let barFlex
 
-      const needsPadding = weekN === 0 || weekN === 52
+      const isFirstWeek = weekN === 0
+      const isFinalWeek = weekN === 52 * rowRatio
+      const needsPadding = isFirstWeek || isFinalWeek
 
-      if (weekN === 0) {
+      if (isFirstWeek) {
         spacerFlex = week.find(d => !d.isFiller).dayOfWeek
-        barFlex = 7 - spacerFlex
-      } else if (weekN === 52) {
+        barFlex = rowLength - spacerFlex
+      } else if (isFinalWeek) {
         barFlex = week.findIndex(d => d.isFiller)
-        spacerFlex = 7 - barFlex
+        spacerFlex = rowLength - barFlex
       }
 
       const markers = []
 
-      if (weekN === 52) {
+      let padRatio = 1
+
+      if (needsPadding) {
+        const dayCount = week.filter(d => !d.isFiller).length
+        padRatio = rowLength / dayCount
+      }
+
+      let nextPct = (lastRem + onePct) * padRatio
+
+      if (isFinalWeek && nextPct >= 100) {
         markers.push([100, true])
       } else {
         if (lastRem) {
           markers.push([lastRem, true])
         }
 
-        let nextPct = lastRem + onePct
-        let padRatio = 1
-
-        if (weekN === 0) {
-          const dayCount = week.filter(d => !d.isFiller).length
-          padRatio = 7 / dayCount
-          nextPct *= padRatio
-        }
-
-        if (nextPct <= 100) {
-          const rem = 100 - nextPct
+        while (nextPct <= 100) {
           markers.push([onePct * padRatio, true])
-          markers.push([rem, false])
-          lastRem = onePct - rem / padRatio
-        } else {
-          markers.push([100 - lastRem, false])
-          lastRem = onePct - (100 - lastRem)
+          nextPct += onePct
         }
+
+        const rem = 100 - nextPct + onePct
+        markers.push([rem, false])
+        lastRem = onePct - rem
       }
 
       return `
@@ -156,7 +162,7 @@ container.innerHTML = `
                 .join('')}
             </div>
             ${
-              weekN === 52
+              isFinalWeek
                 ? `<div class="progress-spacer" style="flex: ${spacerFlex}"></div>`
                 : ''
             }
@@ -168,23 +174,21 @@ container.innerHTML = `
                 day.isFiller
                   ? '<div class="day filler"></div>'
                   : `
-                  <div class="day">
+                    <div class="day ${day.isWeekend ? 'weekend' : ''}">
 
-                    ${
-                      day.date === 1
-                        ? `<div class="label month-label">${monthLabels[
-                            day.month
-                          ] +
-                            ' ' +
-                            day.date}</div>`
-                        : `<div class="label date-label">${day.date}</div>`
-                    }
-                    ${
-                      day.date === moons[day.month]
-                        ? '<div class="moon"></div>'
-                        : ''
-                    }
-                  </div>
+                      ${
+                        day.date === 1
+                          ? `<div class="label month-label">${
+                              monthLabels[day.month]
+                            }</div>`
+                          : `<div class="label date-label">${day.date}</div>`
+                      }
+                      ${
+                        day.date === moons[day.month]
+                          ? '<div class="moon"></div>'
+                          : ''
+                      }
+                    </div>
                   `
               )
               .join('')}
