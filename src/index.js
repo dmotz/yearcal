@@ -108,19 +108,20 @@ container.innerHTML = `
 
       let nextPct = (lastRem + onePct) * padRatio
 
-      if (isFinalWeek && nextPct >= 100) {
-        markers.push([100, true])
+      if (lastRem) {
+        markers.push([lastRem * padRatio, true])
+      }
+
+      while (nextPct <= 100) {
+        markers.push([onePct * padRatio, true])
+        nextPct += onePct * padRatio
+      }
+
+      if (isFinalWeek) {
+        last(markers)[0] =
+          100 - markers.slice(0, -1).reduce((a, [c]) => a + c, 0)
       } else {
-        if (lastRem) {
-          markers.push([lastRem, true])
-        }
-
-        while (nextPct <= 100) {
-          markers.push([onePct * padRatio, true])
-          nextPct += onePct
-        }
-
-        const rem = 100 - nextPct + onePct
+        const rem = 100 - (nextPct - onePct * padRatio)
         markers.push([rem, false])
         lastRem = onePct - rem
       }
