@@ -3,7 +3,10 @@ import './style.scss'
 const year = 2019
 const startOnDayOfWeek = 1
 const rowLength = 14
-const days = 365
+const nDays = 365
+const nWeeks = 52
+const weekLen = 7
+
 const weekendDays = [0, 6]
 
 const monthLabels = [
@@ -41,14 +44,14 @@ const makeDay = (i, isFiller) => {
   return {
     month: date.getMonth(),
     date: date.getDate(),
-    dayOfWeek: (dayOfWeek - startOnDayOfWeek + 7) % 7,
+    dayOfWeek: (dayOfWeek - startOnDayOfWeek + weekLen) % weekLen,
     isWeekend: dayOfWeek === weekendDays[0] || dayOfWeek === weekendDays[1]
   }
 }
 
 const makeFillers = n => new Array(n).fill().map(() => makeDay(null, true))
 
-const weeks = new Array(days).fill().reduce(
+const weeks = new Array(nDays).fill().reduce(
   (a, _, i) => {
     const day = makeDay(i)
     let week = last(a)
@@ -64,7 +67,7 @@ const weeks = new Array(days).fill().reduce(
       a.push(week)
     }
 
-    if (i === days - 1) {
+    if (i === nDays - 1) {
       week.push.apply(week, makeFillers(rowLength - 1 - day.dayOfWeek))
     }
     return a
@@ -72,22 +75,24 @@ const weeks = new Array(days).fill().reduce(
   [[]]
 )
 
-const rowRatio = 7 / rowLength
-const onePct = (365 / 7) * rowRatio
+const rowRatio = weekLen / rowLength
+const onePct = (nDays / weekLen) * rowRatio
 let lastRem = 0
 let pctN = 0
 
 const container = window.document.getElementById('container')
+const barThresh = 0.1
+const labelThresh = 3
 
 container.innerHTML = `
   ${weeks
     .map((week, weekN) => {
+      const isFirstWeek = weekN === 0
+      const isFinalWeek = weekN === nWeeks * rowRatio
+      const needsPadding = isFirstWeek || isFinalWeek
+
       let spacerFlex
       let barFlex
-
-      const isFirstWeek = weekN === 0
-      const isFinalWeek = weekN === 52 * rowRatio
-      const needsPadding = isFirstWeek || isFinalWeek
 
       if (isFirstWeek) {
         spacerFlex = week.find(d => !d.isFiller).dayOfWeek
@@ -141,7 +146,7 @@ container.innerHTML = `
             }>
               ${markers
                 .map(([pct, isLabel]) => {
-                  if (pct < 0.1) {
+                  if (pct < barThresh) {
                     if (isLabel) {
                       pctN++
                     }
@@ -153,7 +158,7 @@ container.innerHTML = `
                     }" style="width: ${pct}%">${
                     isLabel
                       ? `<div class="progress-label ${
-                          pct < 3 ? 'offset' : ''
+                          pct < labelThresh ? 'offset' : ''
                         }">${++pctN}</div>`
                       : ''
                   }
