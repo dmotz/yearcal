@@ -110,11 +110,10 @@ container.innerHTML = `
 
       const markers = []
 
-      let fillerDays
+      let fillerDays = 0
 
       if (needsPadding) {
-        const dayCount = week.filter(d => !d.isFiller).length
-        fillerDays = rowLength - dayCount
+        fillerDays = week.filter(d => d.isFiller).length
       }
 
       const xOffset = isFirstWeek ? fillerDays * dayWidth : 0
@@ -142,14 +141,15 @@ container.innerHTML = `
         ? (rowLength - fillerDays) * dayWidth
         : 100
 
+      const rowHeight = dayHeight + progressHeight
+
       return `
         <g
-          transform="translate(0, ${weekN * (dayHeight + progressHeight) +
-            rowMargin * weekN})"
+          transform="translate(0, ${weekN * rowHeight + rowMargin * weekN})"
         >
           <rect
             width="${width}"
-            height="${dayHeight + progressHeight}"
+            height="${rowHeight}"
             stroke="${color}"
             stroke-width="${strokeWidth}"
             fill="none"
@@ -206,15 +206,18 @@ container.innerHTML = `
             )
             .join('')}
           ${week
-            .map((day, dayN) =>
-              day.isFiller
+            .map((day, dayN) => {
+              const x = dayN * dayWidth
+              const isFirst = day.date === 1
+
+              return day.isFiller
                 ? ''
                 : `
                   ${
                     day.date === 1
                       ? `
                         <rect
-                          x="${dayN * dayWidth}"
+                          x="${x}"
                           y="${progressHeight}"
                           width=${dayWidth}
                           height=${dayHeight}
@@ -223,10 +226,10 @@ container.innerHTML = `
                       : ''
                   }
                   <text
-                    x="${dayN * dayWidth + 1}"
+                    x="${x + 1}"
                     y="6"
                     fill="${
-                      day.date === 1
+                      isFirst
                         ? day.isWeekend
                           ? 'none'
                           : white
@@ -240,7 +243,7 @@ container.innerHTML = `
                     ${
                       day.isWeekend
                         ? `
-                            stroke=${day.date === 1 ? white : color}
+                            stroke=${isFirst ? white : color}
                             stroke-width="${strokeWidth * textStrokeScale}"
                             letter-spacing="${strokeWidth * textStrokeScale}"
                             ${scaleEffect}
@@ -248,21 +251,17 @@ container.innerHTML = `
                         : ''
                     }
                   >
-                    ${
-                      day.date === 1
-                        ? monthLabels[day.month].toUpperCase()
-                        : day.date
-                    }
+                    ${isFirst ? monthLabels[day.month].toUpperCase() : day.date}
                   </text>
                   ${
                     dayN === 0
                       ? ''
                       : `
                         <line
-                          x1="${dayWidth * dayN}"
-                          x2="${dayWidth * dayN}"
+                          x1="${x}"
+                          x2="${x}"
                           y1="${progressHeight}"
-                          y2="${dayHeight + progressHeight}"
+                          y2="${rowHeight}"
                           stroke="${color}"
                           stroke-width="${strokeWidth}"
                           ${scaleEffect}
@@ -276,13 +275,13 @@ container.innerHTML = `
                           r="0.5"
                           cx="${(dayN + 1) * dayWidth - 1.2}"
                           cy="${progressHeight + 1.2}"
-                          fill="${day.date === 1 ? white : color}"
+                          fill="${isFirst ? white : color}"
                         />
                         `
                       : ''
                   }
                 `
-            )
+            })
             .join('')}
         </g>
         `
