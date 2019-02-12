@@ -95,11 +95,13 @@ let pctN = 0
 
 container.innerHTML = `
   <svg
-    viewBox="-${marginPct} -${marginPct} ${100 + marginPct * 2} ${(nWeeks *
-  rowRatio +
-  1) *
-  (dayHeight + progressHeight + rowMargin) +
-  marginPct * 2}"
+    viewBox="
+      -${marginPct}
+      -${marginPct}
+      ${100 + marginPct * 2}
+      ${(nWeeks * rowRatio + 1) * (dayHeight + progressHeight + rowMargin) +
+        marginPct * 2}
+    "
     text-rendering="optimizeLegibility"
   >
   ${weeks
