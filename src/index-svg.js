@@ -4,6 +4,7 @@ const rowLength = 14
 const nDays = 365
 const nWeeks = 52
 const weekLen = 7
+const showMoons = true
 
 const weekendDays = [0, 6]
 
@@ -270,7 +271,7 @@ const render = () =>
                       `
                   }
                   ${
-                    day.date === moons[day.month]
+                    showMoons && day.date === moons[day.month]
                       ? `
                         <circle
                           r="0.5"
