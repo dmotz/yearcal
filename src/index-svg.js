@@ -77,7 +77,6 @@ const white = '#fff'
 const font = 'Helvetica Neue'
 const rowRatio = weekLen / rowLength
 const onePct = (nDays / weekLen) * rowRatio
-const container = window.document.getElementById('container')
 const labelThresh = 3
 const dayWidth = 100 / rowLength
 const dayHeight = dayWidth * 0.7
@@ -92,7 +91,8 @@ const marginPct = 4
 let lastRem = 0
 let pctN = 0
 
-container.innerHTML = `
+const render = () =>
+  `
   <svg
     viewBox="
       -${marginPct}
@@ -290,3 +290,9 @@ container.innerHTML = `
     .join('')}
   </svg>
 `.replace(/(<.*?>)|\s+/g, (_, s) => (s ? s : ' '))
+
+if (typeof window !== 'undefined') {
+  window.document.getElementById('container').innerHTML = render()
+} else {
+  console.log(render())
+}
