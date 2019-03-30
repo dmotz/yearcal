@@ -1,4 +1,4 @@
-const year = 2019
+const year = new Date().getFullYear()
 const startOnDayOfWeek = 1
 const rowLength = 14
 const nDays = 365
@@ -163,7 +163,7 @@ container.innerHTML = `
             x2="${isFinalWeek ? width : 100}"
             y1="${progressHeight}"
             y2="${progressHeight}"
-            stroke=${color}
+            stroke="${color}"
             stroke-width="${strokeWidth}"
             ${scaleEffect}
           />
@@ -178,8 +178,8 @@ container.innerHTML = `
                       <rect
                         x="${start}"
                         y="0"
-                        width=${end - start}
-                        height=${progressHeight}
+                        width="${end - start}"
+                        height="${progressHeight}"
                         fill="${color}"
                       />
                       `
