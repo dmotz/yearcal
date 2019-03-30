@@ -5,6 +5,7 @@ const nDays = 365
 const nWeeks = 52
 const weekLen = 7
 const showMoons = true
+const elId = 'container'
 
 const weekendDays = [0, 6]
 
@@ -216,7 +217,7 @@ const render = () =>
                 ? ''
                 : `
                   ${
-                    day.date === 1
+                    isFirst
                       ? `
                         <rect
                           x="${x}"
@@ -293,7 +294,7 @@ const render = () =>
 `.replace(/(<.*?>)|\s+/g, (_, s) => (s ? s : ' '))
 
 if (typeof window !== 'undefined') {
-  window.document.getElementById('container').innerHTML = render()
+  window.document.getElementById(elId).innerHTML = render()
 } else {
   console.log(render())
 }
