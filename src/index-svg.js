@@ -85,7 +85,7 @@ const progressHeight = 2
 const forceHairlines = false
 const scaleEffect = forceHairlines ? 'vector-effect="non-scaling-stroke"' : ''
 const strokeWidth = 0.07
-const textStrokeScale = 1.2
+const textStrokeScale = 1
 const marginPct = 4
 
 let lastRem = 0
