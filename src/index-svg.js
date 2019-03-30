@@ -31,9 +31,7 @@ const dayLen = 1000 * 60 * 60 * 24
 
 const makeDay = (i, isFiller) => {
   if (isFiller) {
-    return {
-      isFiller: true
-    }
+    return {isFiller}
   }
 
   const date = new Date(start + dayLen * i)
@@ -76,6 +74,7 @@ const weeks = new Array(nDays).fill().reduce(
 
 const color = '#ea4848'
 const white = '#fff'
+const font = 'Helvetica Neue'
 const rowRatio = weekLen / rowLength
 const onePct = (nDays / weekLen) * rowRatio
 const container = window.document.getElementById('container')
@@ -192,10 +191,10 @@ container.innerHTML = `
                       : `
                       <text
                         x="${end - 0.5}"
-                        y="${progressHeight - 0.5}"
+                        y="${progressHeight - 0.6}"
                         fill="${pctN % 2 ? white : color}"
-                        font-family="Helvetica Neue"
-                        font-size="${progressHeight - 0.5}"
+                        font-family="${font}"
+                        font-size="${progressHeight - 0.8}"
                         font-weight="bold"
                         text-anchor="end"
                       >
@@ -221,8 +220,8 @@ container.innerHTML = `
                         <rect
                           x="${x}"
                           y="${progressHeight}"
-                          width=${dayWidth}
-                          height=${dayHeight}
+                          width="${dayWidth}"
+                          height="${dayHeight}"
                           fill="${color}"
                         />`
                       : ''
@@ -239,13 +238,13 @@ container.innerHTML = `
                         ? 'none'
                         : color
                     }"
-                    font-family="Helvetica Neue"
+                    font-family="${font}"
                     font-size="2"
                     font-weight="bold"
                     ${
                       day.isWeekend
                         ? `
-                            stroke=${isFirst ? white : color}
+                            stroke="${isFirst ? white : color}"
                             stroke-width="${strokeWidth * textStrokeScale}"
                             letter-spacing="${strokeWidth * textStrokeScale}"
                             ${scaleEffect}
