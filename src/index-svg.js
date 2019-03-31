@@ -5,6 +5,7 @@ const nDays = 365
 const nWeeks = 52
 const weekLen = 7
 const showMoons = true
+const useGradient = true
 const elId = 'container'
 
 const weekendDays = [0, 6]
@@ -74,8 +75,10 @@ const weeks = new Array(nDays).fill().reduce(
   [[]]
 )
 
-const color = '#ea4848'
-const white = '#fff'
+const color = useGradient ? '#fff' : '#ea4848'
+const white = useGradient ? '#000' : '#fff'
+const gradientColor1 = '#fee140'
+const gradientColor2 = '#fa709a'
 const font = 'Helvetica Neue'
 const rowRatio = weekLen / rowLength
 const onePct = (nDays / weekLen) * rowRatio
@@ -89,6 +92,10 @@ const scaleEffect = forceHairlines ? 'vector-effect="non-scaling-stroke"' : ''
 const strokeWidth = 0.07
 const textStrokeScale = 1
 const marginPct = 4
+const width = 100 + marginPct * 2
+const height =
+  (nWeeks * rowRatio + 1) * (dayHeight + progressHeight + rowMargin) +
+  marginPct * 2
 
 let lastRem = 0
 let pctN = 0
@@ -99,12 +106,19 @@ const render = () =>
     viewBox="
       -${marginPct}
       -${marginPct}
-      ${100 + marginPct * 2}
-      ${(nWeeks * rowRatio + 1) * (dayHeight + progressHeight + rowMargin) +
-        marginPct * 2}
+      ${width}
+      ${height}
     "
     text-rendering="optimizeLegibility"
   >
+  ${
+    useGradient
+      ? `
+        <mask id="mask">
+          <rect x="0" y="0" width="${width}" height="${height}" fill="#000"/>
+        `
+      : ''
+  }
   ${weeks
     .map((week, weekN) => {
       const isFirstWeek = weekN === 0
@@ -290,6 +304,27 @@ const render = () =>
         `
     })
     .join('')}
+    ${
+      useGradient
+        ? `
+        </mask>
+        <defs>
+          <linearGradient id="gradient" x1="0" x2="0" y1="0" y2="1">
+            <stop stop-color="${gradientColor1}" offset="0%"/>
+            <stop stop-color="${gradientColor2}" offset="100%"/>
+          </linearGradient>
+        </defs>
+        <rect
+          x="0"
+          y="0"
+          width="${width}"
+          height="${height}"
+          fill="url(#gradient)"
+          mask="url(#mask)"
+        />
+        `
+        : ''
+    }
   </svg>
 `.replace(/(<.*?>)|\s+/g, (_, s) => (s ? s : ' '))
 
