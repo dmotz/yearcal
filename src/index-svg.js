@@ -77,8 +77,7 @@ const weeks = new Array(nDays).fill().reduce(
 
 const color = useGradient ? '#fff' : '#ea4848'
 const white = useGradient ? '#000' : '#fff'
-const gradientColor1 = '#fee140'
-const gradientColor2 = '#fa709a'
+const gradientColors = ['#ff984d', '#f0567b', '#9f77ff']
 const font = 'Helvetica Neue'
 const rowRatio = weekLen / rowLength
 const onePct = (nDays / weekLen) * rowRatio
@@ -310,8 +309,16 @@ const render = () =>
         </mask>
         <defs>
           <linearGradient id="gradient" x1="0" x2="0" y1="0" y2="1">
-            <stop stop-color="${gradientColor1}" offset="0%"/>
-            <stop stop-color="${gradientColor2}" offset="100%"/>
+            ${gradientColors
+              .map(
+                (c, i) => `
+                <stop
+                  stop-color="${c}"
+                  offset="${(i / (gradientColors.length - 1)) * 100}%"
+                />
+              `
+              )
+              .join('')}
           </linearGradient>
         </defs>
         <rect
