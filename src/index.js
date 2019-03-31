@@ -28,20 +28,20 @@ const moons = [21, 19, 21, 19, 18, 17, 16, 15, 14, 13, 12, 12]
 
 const last = a => a[a.length - 1]
 
+const now = new Date()
 const start = new Date(year, 0).getTime()
 const dayLen = 1000 * 60 * 60 * 24
 
 const makeDay = (i, isFiller) => {
   if (isFiller) {
-    return {
-      isFiller: true
-    }
+    return {isFiller}
   }
 
   const date = new Date(start + dayLen * i)
   const dayOfWeek = date.getDay()
 
   return {
+    fullDate: date,
     month: date.getMonth(),
     date: date.getDate(),
     dayOfWeek: (dayOfWeek - startOnDayOfWeek + weekLen) % weekLen,
@@ -180,7 +180,9 @@ container.innerHTML = `
                 day.isFiller
                   ? '<div class="day filler"></div>'
                   : `
-                    <div class="day ${day.isWeekend ? 'weekend' : ''}">
+                    <div class="day ${day.isWeekend ? 'weekend' : ''} ${
+                      day.fullDate < now ? 'past' : ''
+                    }">
 
                       ${
                         day.date === 1
