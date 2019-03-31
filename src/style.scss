@@ -1,0 +1,142 @@
+$dark: #ea4848;
+$light: #fff;
+$accent: #ff0000;
+
+* {
+  box-sizing: border-box;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  font-family: 'Helvetica Neue';
+  margin: 2vw;
+  color: $dark;
+}
+
+.week {
+  margin-bottom: 2vw;
+}
+
+.days {
+  display: flex;
+}
+
+.day {
+  border: 1px solid $dark;
+  flex: 1;
+  margin-left: -1px;
+  margin-top: -1px;
+  position: relative;
+}
+
+.weekend .label {
+  -webkit-text-stroke-width: 1.4px;
+  -webkit-text-stroke-color: $dark;
+  color: $light;
+}
+
+.weekend .month-label {
+  -webkit-text-stroke-color: $light;
+  color: $dark;
+}
+
+.filler {
+  visibility: hidden;
+}
+
+.label {
+  padding: 1vw;
+  font-weight: 400;
+  font-weight: bold;
+  display: inline-block;
+  font-size: 2vw;
+  font-size: 3.5vw;
+}
+
+.month-label {
+  background-color: $dark;
+  color: $light;
+  text-transform: uppercase;
+  font-weight: bold;
+  width: 100%;
+}
+
+.progress-row {
+  display: flex;
+}
+
+.progress {
+  flex: 1;
+  border: 1px solid $dark;
+  height: 3vw;
+  margin-top: -1px;
+  margin-left: -1px;
+  font-size: 0;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.progress-marker {
+  border-right: 1px solid $dark;
+  font-weight: bold;
+  font-size: 1.8vw;
+  height: 100%;
+  padding-right: 0.5vw;
+  display: inline-block;
+  vertical-align: top;
+}
+
+.progress-marker:last-child {
+  border-right: none;
+}
+
+.progress-label {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.progress-label.offset {
+  transform: translateX(400%);
+  color: $light;
+  display: none;
+}
+
+.progress-dark {
+  background-color: $dark;
+  color: $light;
+}
+
+.progress-dark .offset {
+  color: $dark;
+}
+
+.moon {
+  background-color: $dark;
+  width: 1.5vw;
+  height: 1.5vw;
+  border-radius: 50%;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  right: 1vw;
+}
+
+.label {
+  font-size: 1.8vw;
+}
+
+.moon {
+  width: 0.8vw;
+  height: 0.8vw;
+}
+
+.progress {
+  height: 1.5vw;
+}
+
+.progress-marker {
+  font-size: 1.1vw;
+}
