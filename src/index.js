@@ -102,6 +102,7 @@ let pctN = 0
 const render = () =>
   `
   <svg
+    xmlns="http://www.w3.org/2000/svg"
     viewBox="
       -${marginPct}
       -${marginPct}
