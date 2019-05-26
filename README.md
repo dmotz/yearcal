@@ -1,6 +1,8 @@
 # YearCal
 
-### My loose grasp on time, or: a yearlong calendar in one percent increments
+### My loose grasp on time
+
+### or: A yearlong calendar in one percent increments
 
 by [Dan Motzenbecker](https://oxism.com)
 
