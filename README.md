@@ -8,6 +8,8 @@ by [Dan Motzenbecker](https://oxism.com)
 
 ---
 
+![YearCal](https://user-images.githubusercontent.com/302080/58386126-3c664480-7fc9-11e9-86d8-1937156a1c65.png)
+
 `yearcal.svg` is ready to print. To customize the calendar, read the section
 below.
 
