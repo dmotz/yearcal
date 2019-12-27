@@ -3,7 +3,8 @@ import './style.scss'
 const year = 2019
 const startOnDayOfWeek = 1
 const rowLength = 14
-const nDays = 365
+const nDays =
+  365 + (year % 400 === 0 || (year % 100 !== 0 && year % 4 === 0) ? 1 : 0)
 const nWeeks = 52
 const weekLen = 7
 
