@@ -300,7 +300,7 @@ const render = () =>
                       `
                   }
                   ${
-                    showMoons && day.date === moons[day.month]
+                    showMoons && moons[day.month].includes(day.date)
                       ? `
                         <circle
                           r="0.5"
