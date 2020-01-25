@@ -25,7 +25,20 @@ const monthLabels = [
   'Dec'
 ]
 
-const moons = [21, 19, 21, 19, 18, 17, 16, 15, 14, 13, 12, 12]
+const moons = [
+  [10],
+  [9],
+  [9],
+  [7],
+  [7],
+  [5],
+  [5],
+  [3],
+  [2],
+  [1, 31],
+  [30],
+  [29]
+]
 
 const last = a => a[a.length - 1]
 
@@ -193,7 +206,7 @@ container.innerHTML = `
                           : `<div class="label date-label">${day.date}</div>`
                       }
                       ${
-                        day.date === moons[day.month]
+                        moons[day.month].includes(day.date)
                           ? '<div class="moon"></div>'
                           : ''
                       }
