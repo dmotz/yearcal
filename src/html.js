@@ -1,6 +1,6 @@
 import './style.scss'
 
-const year = 2019
+const year = new Date().getFullYear()
 const startOnDayOfWeek = 1
 const rowLength = 14
 const nDays =
